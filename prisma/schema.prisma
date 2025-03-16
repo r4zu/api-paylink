@@ -15,8 +15,38 @@ datasource db {
 
 model Payments {
   id         String   @id @default(cuid())
-  amount     Float
   email      String
+  amount     Float
+  created_at DateTime @default(now())
+
+  billingAddress     BillingAddress?
+  paymentInformation PaymentInformation?
+}
+
+model BillingAddress {
+  id         String   @id @default(cuid())
+  full_name  String
+  address    String
+  city       String
+  state      String
+  zip        String
+  phone      String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  payments   Payments @relation(fields: [paymentsId], references: [id])
+  paymentsId String   @unique
+}
+
+model PaymentInformation {
+  id           String   @id @default(cuid())
+  name_on_card String
+  card_number  String
+  expiration   String
+  cvv          String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  payments   Payments @relation(fields: [paymentsId], references: [id])
+  paymentsId String   @unique
 }
