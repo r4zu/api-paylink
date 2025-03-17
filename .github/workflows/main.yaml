@@ -1,4 +1,4 @@
-name: Build and Deploy Docker Image to AWS ECR
+name: Test, Build and Deploy Docker Image to AWS ECR
 
 on:
   workflow_dispatch:
@@ -21,6 +21,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Generate prisma
+        run: pnpm prisma generate
 
       - name: Run unit tests
         env:
