@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc && node fix-imports.js",
     "start": "tsx src/index.ts",
     "compose:up": "docker compose -f docker-compose.dev.yaml up -d",
     "compose:down": "docker compose down --remove-orphans",
@@ -15,6 +15,7 @@
     "@hono/zod-validator": "^0.4.3",
     "@prisma/client": "^6.5.0",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "hono": "^4.7.4",
     "zod": "^3.24.2"
   },

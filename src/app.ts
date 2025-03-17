@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
 
-import { payLinkRoute } from './routes/paylink.js';
+import { payLinkRoute } from './routes/paylink';
 
 const app = new Hono();
 

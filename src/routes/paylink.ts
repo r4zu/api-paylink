@@ -2,14 +2,14 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { HTTPException } from 'hono/http-exception';
 
-import { paymentSchema, type Payment } from '../routes/schema.ts';
-import { prisma } from '../db/client.ts';
+import { paymentSchema } from '../routes/schema';
+import { prisma } from '../db/client';
 import {
   createMaskToken,
   determineCardType,
   isCuid,
   maskCardNumber,
-} from '../tools/utilities.ts';
+} from '../tools/utilities';
 
 const payLinkRoute = new Hono();
 

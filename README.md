@@ -62,4 +62,20 @@ pnpm compose:down
   npm install -g pnpm
   ```
 
-- For any issues or contributions, please refer to the [GitHub repository](https://github.com/r4zu/api-paylink).
+## Production Setup
+
+To manually build and run the application in a production environment, follow these steps:
+
+1. **Build the Docker image:**
+
+```sh
+docker build --build-arg API_DATABASE_URL="your_database_url_value" -t paylink-api:latest .
+```
+
+2. **Run the Docker container:**
+
+```sh
+docker run -e DATABASE_URL="your_database_url_value" -p 8080:8080 paylink-api:latest
+```
+
+Replace `"your_database_url_value"` with the actual database URL you intend to use in the production environment.

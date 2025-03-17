@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { serve } from '@hono/node-server';
-import app from './app.ts';
+import app from './app';
 
 vi.mock('@hono/node-server', () => ({
   serve: vi.fn(),
@@ -13,7 +13,7 @@ describe('Server', () => {
       .spyOn(console, 'log')
       .mockImplementation(() => {});
 
-    await import('./index.ts');
+    await import('./index');
 
     expect(mockServe).toHaveBeenCalledWith(
       {

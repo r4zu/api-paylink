@@ -1,12 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import crypto from 'crypto';
 import {
   isCuid,
   maskCardNumber,
   determineCardType,
   createMaskToken,
   decryptToken,
-} from './utilities.ts';
+} from './utilities';
 
 describe('Utilities', () => {
   describe('isCuid', () => {

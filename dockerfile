@@ -5,11 +5,20 @@ FROM base AS builder
 RUN apk add --no-cache gcompat
 WORKDIR /app
 
-COPY package*json tsconfig.json src ./
+ARG API_DATABASE_URL
+ENV DATABASE_URL=$API_DATABASE_URL
 
-RUN npm ci && \
-    npm run build && \
-    npm prune --production
+RUN npm install -g pnpm
+
+COPY . .
+
+RUN pnpm install --frozen-lockfile && pnpm store prune
+
+RUN npx prisma migrate deploy
+RUN npx prisma generate
+RUN pnpm build
+
+RUN npm uninstall -g pnpm
 
 FROM base AS runner
 WORKDIR /app
@@ -22,6 +31,7 @@ COPY --from=builder --chown=hono:nodejs /app/dist /app/dist
 COPY --from=builder --chown=hono:nodejs /app/package.json /app/package.json
 
 USER hono
-EXPOSE 3000
 
-CMD ["node", "/app/dist/index.js"]
+EXPOSE 8080
+
+CMD [ "node", "/app/dist/src/index.js" ]

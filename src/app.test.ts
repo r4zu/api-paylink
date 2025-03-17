@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import app from './app.ts';
+import app from './app';
 
 describe('App healthy', async () => {
   it('should return health status', async () => {

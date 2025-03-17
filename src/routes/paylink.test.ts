@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import app from '../app.ts';
+import app from '../app';
 
 describe('payLinkRoute', async () => {
   it('should return a list of payments', async () => {
@@ -9,7 +9,10 @@ describe('payLinkRoute', async () => {
   });
 
   it('should return a single payment', async () => {
-    const res = await app.request('/api/paylink/cm8dbv3l60000scbpedvyx45v');
+    // AWS RDS DB
+    // const res = await app.request('/api/paylink/cm8dbv3l60000scbpedvyx45v');
+    // NEON DB
+    const res = await app.request('/api/paylink/cm8di6qkz0000scp81zecmqo3');
 
     expect(res.status).toBe(200);
   });
