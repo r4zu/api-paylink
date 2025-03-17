@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import * as bcrypt from 'bcrypt';
 
 export function isCuid(stringToCheck: string): boolean {
   if (typeof stringToCheck !== 'string') return false;
@@ -23,29 +23,12 @@ export function determineCardType(cardNumber: string): string {
 }
 
 export async function createMaskToken(sensitiveData: string): Promise<string> {
-  const algorithm = 'aes-256-cbc';
-
-  const key = crypto.randomBytes(32);
-  const iv = crypto.randomBytes(16);
-
-  const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
-  let encrypted = cipher.update(sensitiveData, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-
-  return iv.toString('hex') + ':' + encrypted;
+  return bcrypt.hash(sensitiveData, 10);
 }
 
 export async function decryptToken(token: string): Promise<string> {
-  const algorithm = 'aes-256-cbc';
-  const key = crypto.randomBytes(32);
-
-  const parts = token.split(':');
-  const iv = Buffer.from(parts[0], 'hex');
-  const encryptedText = parts[1];
-
-  const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
-  let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
-  decrypted += decipher.final('utf8');
-
-  return decrypted;
+  return bcrypt.compare('mySensitiveData', token).then((res: any) => {
+    if (res) return 'mySensitiveData';
+    return '';
+  });
 }
