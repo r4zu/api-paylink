@@ -14,7 +14,7 @@ import {
 const payLinkRoute = new Hono();
 
 payLinkRoute.get('/', async (c) => {
-  const payments: Payment[] = await prisma.payments.findMany();
+  const payments = await prisma.payments.findMany();
 
   return c.json({ payments: payments });
 });

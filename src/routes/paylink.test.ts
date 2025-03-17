@@ -9,7 +9,7 @@ describe('payLinkRoute', async () => {
   });
 
   it('should return a single payment', async () => {
-    const res = await app.request('/api/paylink/cm8byzxqj0000scwfvv0949c5');
+    const res = await app.request('/api/paylink/cm8dbv3l60000scbpedvyx45v');
 
     expect(res.status).toBe(200);
   });

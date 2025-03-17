@@ -8,7 +8,7 @@ vi.mock('@hono/node-server', () => ({
 
 describe('Server', () => {
   it('should start the server on the specified port', async () => {
-    const mockServe = serve as vi.Mock;
+    const mockServe = vi.mocked(serve);
     const mockConsoleLog = vi
       .spyOn(console, 'log')
       .mockImplementation(() => {});
@@ -23,7 +23,7 @@ describe('Server', () => {
       expect.any(Function)
     );
 
-    const callback = mockServe.mock.calls[0][1];
+    const callback = mockServe.mock.calls[0][1] as Function;
     callback({ port: 8080 });
 
     expect(mockConsoleLog).toHaveBeenCalledWith(

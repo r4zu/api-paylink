@@ -3,6 +3,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "tsx src/index.ts",
     "compose:up": "docker compose -f docker-compose.dev.yaml up -d",
     "compose:down": "docker compose down --remove-orphans",
     "test": "vitest",
@@ -22,6 +24,7 @@
     "@vitest/coverage-v8": "3.0.8",
     "prisma": "^6.5.0",
     "tsx": "^4.7.1",
+    "typescript": "^5.8.2",
     "vitest": "^3.0.8"
   }
 }
