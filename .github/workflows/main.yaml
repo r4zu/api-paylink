@@ -5,6 +5,7 @@ on:
 
 jobs:
   test:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -29,3 +30,58 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: pnpm test
+
+  build_and_push:
+    needs: test
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate prisma
+        run: |
+          pnpm prisma migrate dev
+
+      - name: Build Docker image
+        env:
+          API_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          docker build \
+          -t paylink-api:latest \
+          --build-arg API_DATABASE_URL=$API_DATABASE_URL .
+
+      - name: Log in to Amazon ECR
+        run: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+
+      - name: Create ECR repository (if not exists)
+        run: |
+          aws ecr describe-repositories --repository-names paylink-api || aws ecr create-repository --repository-name paylink-api
+
+      - name: Tag Docker image
+        run: |
+          docker tag paylink-api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/paylink-api:latest
+
+      - name: Push Docker image to ECR
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/paylink-api:latest
