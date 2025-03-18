@@ -59,8 +59,7 @@ jobs:
         run: pnpm install
 
       - name: Generate prisma
-        run: |
-          pnpm prisma migrate dev
+        run: pnpm prisma generate
 
       - name: Build Docker image
         env:
